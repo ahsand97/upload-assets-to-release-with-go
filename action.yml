@@ -1,0 +1,108 @@
+name: 'Upload Assets to Release with Go'
+description: 'Cross platform GitHub action to upload multiple assets to a release using Golang'
+branding:
+  icon: 'package'
+  color: 'green'
+inputs:
+  owner:
+    description: 'Owner of Github Repository'
+    required: true
+    default: ${{ github.repository_owner }}
+  token:
+    description: 'Github Token'
+    required: true
+    default: ${{ github.token }}
+  repo:
+    description: 'Github Repo'
+    required: true
+    default: ${{ github.repository }}
+  tag:
+    description: 'Github Tag associated with the release where to upload the assets'
+    required: true
+    default: ${{ github.event.release.tag_name }}
+  workspace:
+    description: 'Workspace where to search the assets'
+    required: true
+    default: ${{ github.workspace }}
+  overwrite_assets:
+    description: 'Overwrite if asset is already in release'
+    required: true
+    default: true
+  revert_on_failure:
+    description: 'Revert (delete all already uploaded assets) in case of failure'
+    required: true
+    default: true
+  files:
+    description: 'String array with assets to upload to the release. Can be global regex'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - id: pre-install-golang
+      name: Prepare Go installation
+      shell: bash
+      run: |
+        export GO_REQUIRED_VERSION=1.19.2
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          export GO_SOURCE_FILE=go$GO_REQUIRED_VERSION.linux-amd64.tar.gz
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          export GO_SOURCE_FILE=go$GO_REQUIRED_VERSION.windows-amd64.zip
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          export GO_SOURCE_FILE=go$GO_REQUIRED_VERSION.darwin-amd64.tar.gz
+        fi
+        echo "GO_SOURCE_FILE=$GO_SOURCE_FILE" >> $GITHUB_ENV
+        echo "GO_REQUIRED_VERSION=$GO_REQUIRED_VERSION" >> $GITHUB_ENV
+        printf "\033[34;1mGO REQUIRED VERSION=\033[0m"
+        printf "\033[0;32m$GO_REQUIRED_VERSION\033[0m\n"
+    - id: install-golang
+      name: Download and install Go
+      shell: bash
+      run: |
+        mkdir -p $HOME/go$GO_REQUIRED_VERSION
+        cd $HOME/go$GO_REQUIRED_VERSION
+        printf "\033[34;1mDOWNLOADING FILE \033[0m"
+        printf "\033[0;32m$GO_SOURCE_FILE\033[0m\n"
+        curl -OL "https://go.dev/dl/$GO_SOURCE_FILE"
+        printf "\n\033[34;1mINSTALLING Go \033[0m"
+        printf "\033[0;32mv$GO_REQUIRED_VERSION\033[0m\n"
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          unzip -qq $GO_SOURCE_FILE && mv go/* ./ && rm -rf go
+        else
+          tar -xf $GO_SOURCE_FILE --strip-components=1
+          export GOPATH=$HOME/go$GO_REQUIRED_VERSION
+          echo GOPATH=$GOPATH >> $GITHUB_ENV
+          echo PATH=$GOPATH/bin:$PATH >> $GITHUB_ENV
+        fi
+        rm $GO_SOURCE_FILE
+        printf "\033[34;1mGo successfully installed...\033[0m\n\n"
+    - id: pass-input
+      name: Pass input to env vars so the script can work
+      shell: bash
+      run: |
+        echo INPUT_OWNER=${{ inputs.owner }} >> $GITHUB_ENV
+        echo INPUT_TOKEN=${{ inputs.token }} >> $GITHUB_ENV
+        echo INPUT_REPO=${{ inputs.repo }} >> $GITHUB_ENV
+        echo INPUT_TAG=${{ inputs.tag }} >> $GITHUB_ENV
+        echo INPUT_WORKSPACE=${{ inputs.workspace }} >> $GITHUB_ENV
+        echo INPUT_OVERWRITE_ASSETS=${{ inputs.overwrite_assets }} >> $GITHUB_ENV
+        echo INPUT_REVERT_ON_FAILURE=${{ inputs.revert_on_failure }} >> $GITHUB_ENV
+        echo INPUT_FILES=${{ inputs.files }} >> $GITHUB_ENV
+    - id: run-upload-assets-to-release-win
+      name: Run main script on windows
+      if: ${{ runner.os == 'Windows' }}
+      shell: pwsh
+      run: |
+        $env:GOPATH="$HOME\go$env:GO_REQUIRED_VERSION"
+        $env:PATH="$env:GOPATH\bin;$env:PATH"
+        $env:INPUT_WORKSPACE="${{ inputs.workspace }}"
+        cd $env:GITHUB_ACTION_PATH
+        go mod tidy
+        go run main.go
+    - id: run-upload-assets-to-release-linuxmac
+      name: Run main script on linux/mac
+      if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+      shell: bash
+      run: |
+        cd $GITHUB_ACTION_PATH
+        go mod tidy
+        go run main.go

@@ -49,5 +49,7 @@ jobs:
         with:
           files: '["my_asset"]'
 ```
+![Screenshot_20221018_183011](https://user-images.githubusercontent.com/32344641/196568443-bad71ef6-22e1-4837-91fe-503bc3a1e9b5.png)
+
 ## License
 This project is released under the [MIT](https://github.com/ahsand97/upload-assets-to-release-with-go/blob/main/LICENSE) license.

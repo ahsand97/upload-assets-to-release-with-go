@@ -16,7 +16,7 @@ permissions:
 ```
 
 ## Arguments
-All default values are passed if the action is used on a `release` event workflow, otherwise they missing ones need to be provided since the `event` associated might not have all the necessary values.
+All default values are passed if the action is used on a `release` event workflow, otherwise the missing ones need to be provided since the `event` associated might not have all the necessary values.
 
 |Name|Required|Default value|Description|
 |:---:|:---:|:---:|:---|
@@ -44,7 +44,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
-      - name: Upload assets to release
+      - name: Upload Assets to Release with Go
         uses: ahsand97/upload-assets-to-release-with-go@v0.1.0
         with:
           files: '["my_asset"]'

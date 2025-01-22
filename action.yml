@@ -42,7 +42,7 @@ runs:
       name: Prepare Go installation
       shell: bash
       run: |
-        export GO_REQUIRED_VERSION=1.19.2
+        export GO_REQUIRED_VERSION=1.23.4
         if [ "$RUNNER_OS" == "Linux" ]; then
           export GO_SOURCE_FILE=go$GO_REQUIRED_VERSION.linux-amd64.tar.gz
         elif [ "$RUNNER_OS" == "Windows" ]; then
@@ -96,7 +96,6 @@ runs:
         $env:PATH="$env:GOPATH\bin;$env:PATH"
         $env:INPUT_WORKSPACE="${{ inputs.workspace }}"
         cd $env:GITHUB_ACTION_PATH
-        go mod tidy
         go run main.go
     - id: run-upload-assets-to-release-linuxmac
       name: Run main script on linux/mac
@@ -104,5 +103,4 @@ runs:
       shell: bash
       run: |
         cd $GITHUB_ACTION_PATH
-        go mod tidy
         go run main.go

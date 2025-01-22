@@ -1,5 +1,5 @@
 # ahsand97/upload-assets-to-release-with-go
-Cross platform GitHub action to upload multiple assets to a release using Golanguage.
+Cross platform GitHub Action to upload multiple assets to a release using Golanguage.
 
 ## Features
 - Assets can be global regex
@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Upload Assets to Release with Go
-        uses: ahsand97/upload-assets-to-release-with-go@v0.1.0
+        uses: ahsand97/upload-assets-to-release-with-go@v0.1.1
         with:
           files: '["my_asset"]'
 ```

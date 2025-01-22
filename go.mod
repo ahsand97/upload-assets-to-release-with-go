@@ -1,24 +1,17 @@
-module upload-asset-github
+module upload-assets-to-git-release
 
-go 1.19
-
-require (
-	github.com/chigopher/pathlib v0.12.0
-	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
-)
+go 1.23.4
 
 require (
-	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
-)
-
-require (
+	github.com/chigopher/pathlib v0.19.1
 	github.com/enescakir/emoji v1.0.0
 	github.com/google/go-github/v47 v47.1.0
-	github.com/spf13/afero v1.9.2 // indirect
+	golang.org/x/oauth2 v0.25.0
+)
+
+require (
+	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/spf13/afero v1.12.0 // indirect
+	golang.org/x/crypto v0.32.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 )

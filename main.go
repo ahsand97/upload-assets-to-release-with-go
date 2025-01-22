@@ -46,7 +46,7 @@ func (githubClient *GithubClient) setupDataFromEnv() {
 	// Inner function to get data from environment variable
 	getDataFromEnv := func(env string, errors *string) string {
 		value := os.Getenv(env)
-		if !(len(value) > 0) {
+		if len(value) <= 0 {
 			*errors += fmt.Sprintf("The environment variable \"%s\" was not found.\n", env)
 		}
 		return value
@@ -103,7 +103,7 @@ func (githubClient *GithubClient) setupDataFromEnv() {
 			validElementsFromInput := re.FindAllString(assetsInput, -1)
 			for _, elementFromInput := range validElementsFromInput {
 				elementFromInput = strings.TrimSpace(elementFromInput)
-				if !(len(elementFromInput) > 0) {
+				if len(elementFromInput) <= 0 {
 					continue
 				}
 				elementFromInput = strings.ReplaceAll(elementFromInput, "\"", "")
@@ -119,7 +119,7 @@ func (githubClient *GithubClient) setupDataFromEnv() {
 		fmt.Print("\n")
 		errors_ := strings.Split(errors, "\n")
 		for _, err_ := range errors_ {
-			if !(len(strings.TrimSpace(err_)) > 0) {
+			if len(strings.TrimSpace(err_)) <= 0 {
 				continue
 			}
 			fmt.Printf("%s %s", fmt.Sprintf(yellow, "    -"), fmt.Sprintf(red, err_))
@@ -205,7 +205,7 @@ func (githubClient *GithubClient) getAssetsToUpload() {
 			}
 		}
 	}
-	if !(len(foundAssets) > 0) {
+	if len(foundAssets) <= 0 {
 		fmt.Printf(
 			"%s %s",
 			fmt.Sprintf(yellow, "  -"),
@@ -249,7 +249,7 @@ func (githubClient *GithubClient) uploadAssetsToRelease() bool {
 
 	// Auxiliar function to reverse the uploaded assets in case of failure
 	revertAll := func() {
-		if !(len(successFullyUploadedAssets) > 0) {
+		if len(successFullyUploadedAssets) <= 0 {
 			return
 		}
 		fmt.Print("\n")

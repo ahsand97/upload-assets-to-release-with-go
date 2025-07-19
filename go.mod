@@ -6,7 +6,7 @@ require (
 	github.com/chigopher/pathlib v0.19.1
 	github.com/enescakir/emoji v1.0.0
 	github.com/google/go-github/v47 v47.1.0
-	golang.org/x/oauth2 v0.25.0
+	golang.org/x/oauth2 v0.27.0
 )
 
 require (

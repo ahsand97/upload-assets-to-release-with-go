@@ -1,6 +1,6 @@
 module upload-assets-to-git-release
 
-go 1.23.4
+go 1.24.0
 
 require (
 	github.com/chigopher/pathlib v0.19.1
@@ -12,6 +12,6 @@ require (
 require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
-	golang.org/x/crypto v0.35.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/crypto v0.45.0 // indirect
+	golang.org/x/text v0.31.0 // indirect
 )
